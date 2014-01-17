@@ -7,10 +7,8 @@ echo "Author : Sen1993 [note:it is my first shell script !!]"
 
 read -p "Input your birthday(example : 19931227) : " data1
 
-data2=$(echo $data1 | grep '[0-9]\{8\}')
-if [ "$data2" == "" ]; then
-	echo "wrong format !!"
-	exit 1
+if [ "$data1" == "" ]; then
+	data1="19931227"
 fi
 
 data_s1=$(date --date="$data1" +%s)
