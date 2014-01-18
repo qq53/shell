@@ -1,7 +1,7 @@
 #  File : cmd.sh
 #  ------------------------------------
 #  Create date : 2014-01-17 17:03
-#  Modified date: 2014-01-18 15:34
+#  Modified date: 2014-01-18 16:56
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -30,7 +30,7 @@ declare -i min=99999
 
 echo 'These KEYWORD can see :'
 for key in $param; do
-	sum=$(cat -n ./bash/"$filename".txt | grep -i "^\s*[0-9]*\s*$key[:]*$"\
+	sum=$(cat -n ./bash/"$filename".txt | egrep -i "^\s*[0-9]*\s*$key[:]?$"\
 		| xargs | awk -F " " '{print $1}')
 	if [ "$(($sum))" -gt 0 ]; then
 		data[$key]=$(($sum))
@@ -58,7 +58,7 @@ while [ 1 ]; do
 	flag=0
 	until [ "$keyword" != "" ]; do
 		read -p "Input which keyword you want to see(q to exit) : " keyword
-		if echo "$keyword" | grep -i "q" ; then
+		if echo "$keyword" | grep -i "q" > /dev/null; then
 			exit 0
 		fi
 		if [ "$keyword" == "" ]; then
@@ -71,7 +71,7 @@ while [ 1 ]; do
 				fi
 			done
 			if [ "$flag" -eq 0 ]; then
-				if echo "$keyword" | grep -i "description"; then
+				if echo "$keyword" | grep -i "description" > /dev/null; then
 					sed -n '1,'$min'p' ./bash/"$filename".txt
 					continue 2
 				fi
@@ -86,7 +86,7 @@ while [ 1 ]; do
 	flag=2
 	declare -i k
 	for key in ${!data[@]};  do
-		if echo "$key" | grep -i "$keyword"; then
+		if echo "$key" | grep -i "$keyword" > /dev/null; then
 			i=${data[$key]}
 			for j in ${nextarr[@]}; do
 				if [ "$flag" -eq 0 ]; then
@@ -100,7 +100,6 @@ while [ 1 ]; do
 			break
 		fi
 	done
-	i=$i+1
 	if [ "$flag" -eq 1 ]; then
 		j=$j-1
 		sed -n $i','$j'p' ./bash/"$filename".txt
