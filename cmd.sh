@@ -1,7 +1,7 @@
 #  File : cmd.sh
 #  ------------------------------------
 #  Create date : 2014-01-17 17:03
-#  Modified date: 2014-01-18 21:39
+#  Modified date: 2014-01-18 21:44
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -57,9 +57,7 @@ while [ 1 ]; do
 	flag=0
 	until [ -n "$keyword" ]; do
 		read -p "Input which keyword you want to see(q to exit) : " keyword
-		if echo "$keyword" | grep -i "q" > /dev/null; then
-			exit 0
-		fi
+		echo "$keyword" | grep -i "q" > /dev/null && exit 0
 		if [ -z "$keyword" ]; then
 			echo " wrong data ,retry !!"
 		else
@@ -92,9 +90,7 @@ while [ 1 ]; do
 					flag=1
 					break
 				fi
-				if [ "$j" -eq $i ]; then
-					flag=0
-				fi
+				[ "$j" -eq $i ] && flag=0
 			done
 			break
 		fi
