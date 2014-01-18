@@ -1,7 +1,7 @@
 #  File : cmd.sh
 #  ------------------------------------
 #  Create date : 2014-01-17 17:03
-#  Modified date: 2014-01-18 17:20
+#  Modified date: 2014-01-18 21:35
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -15,12 +15,10 @@ if [ "$#" -eq 1 ]; then
 	if [ -f "./bash/$1.txt" ]; then
 		filename=$1
 	else
-		echo "Not exist this file !!"
-		exit 1
+		echo "Not exist this file !!" && exit 1
 	fi
 else
-	echo "need a filename like : alias"
-	exit 1
+	echo "need a filename like : alias" && exit 1
 fi
 
 param="syntax options service filenames notes security output related key examples\
@@ -30,7 +28,7 @@ declare -i min=99999
 
 echo 'These KEYWORD can see :'
 for key in $param; do
-	sum=$(cat -n ./bash/"$filename".txt | egrep -i "^\s*[0-9]*\s*$key[:]?$"\
+	sum=$(cat -n ./bash/"$filename".txt | egrep -i "^\s*[0-9]+\s*$key[:]?$"\
 		| xargs | awk -F " " '{print $1}')
 	if [ "$(($sum))" -gt 0 ]; then
 		data[$key]=$(($sum))
@@ -56,16 +54,16 @@ declare -i flag
 while [ 1 ]; do
 	keyword="";
 	flag=0
-	until [ "$keyword" != "" ]; do
+	until [ -n "$keyword" ]; do
 		read -p "Input which keyword you want to see(q to exit) : " keyword
 		if echo "$keyword" | grep -i "q" > /dev/null; then
 			exit 0
 		fi
-		if [ "$keyword" == "" ]; then
+		if [ -z "$keyword" ]; then
 			echo " wrong data ,retry !!"
 		else
 			for key in ${!data[@]}; do
-				if [ "$keyword" == $key ]; then 
+				if [ "$keyword" = "$key" ]; then 
 					flag=1
 					break
 				fi
