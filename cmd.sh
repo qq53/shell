@@ -1,7 +1,7 @@
 #  File : cmd.sh
 #  ------------------------------------
 #  Create date : 2014-01-17 17:03
-#  Modified date: 2014-01-18 21:35
+#  Modified date: 2014-01-18 21:39
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -25,12 +25,13 @@ param="syntax options service filenames notes security output related key exampl
 	descripton configuration files caveats values details"
 declare -Ai data
 declare -i min=99999
+declare -i sum
 
 echo 'These KEYWORD can see :'
 for key in $param; do
 	sum=$(cat -n ./bash/"$filename".txt | egrep -i "^\s*[0-9]+\s*$key[:]?$"\
 		| xargs | awk -F " " '{print $1}')
-	if [ "$(($sum))" -gt 0 ]; then
+	if [ "$sum" -gt 0 ]; then
 		data[$key]=$(($sum))
 		echo "$key "
 		if [ ${data[$key]} -lt $min ]; then
@@ -68,13 +69,13 @@ while [ 1 ]; do
 					break
 				fi
 			done
-			if [ "$flag" -eq 0 ]; then
+			if [ "$flag" == 0 ]; then
 				if echo "$keyword" | grep -i "description" > /dev/null; then
 					sed -n '1,'$min'p' ./bash/"$filename".txt | grep ".*" --color
 					continue 2
 				fi
 			fi
-			if [ "$flag" -ne 1 ]; then
+			if [ "$flag" != 1 ]; then
 				echo "not find this keyword !!"
 				exit 1
 			fi
@@ -98,7 +99,7 @@ while [ 1 ]; do
 			break
 		fi
 	done
-	if [ "$flag" -eq 1 ]; then
+	if [ "$flag" == 1 ]; then
 		j=$j-1
 		sed -n $i','$j'p' ./bash/"$filename".txt | grep ".*" --color
 	else
