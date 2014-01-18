@@ -1,7 +1,7 @@
 #  File : cmd.sh
 #  ------------------------------------
 #  Create date : 2014-01-17 17:03
-#  Modified date: 2014-01-18 16:56
+#  Modified date: 2014-01-18 17:20
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -24,7 +24,7 @@ else
 fi
 
 param="syntax options service filenames notes security output related key examples\
-	descripton configuration files caveats values"
+	descripton configuration files caveats values details"
 declare -Ai data
 declare -i min=99999
 
@@ -72,7 +72,7 @@ while [ 1 ]; do
 			done
 			if [ "$flag" -eq 0 ]; then
 				if echo "$keyword" | grep -i "description" > /dev/null; then
-					sed -n '1,'$min'p' ./bash/"$filename".txt
+					sed -n '1,'$min'p' ./bash/"$filename".txt | grep ".*" --color
 					continue 2
 				fi
 			fi
@@ -102,8 +102,9 @@ while [ 1 ]; do
 	done
 	if [ "$flag" -eq 1 ]; then
 		j=$j-1
-		sed -n $i','$j'p' ./bash/"$filename".txt
+		sed -n $i','$j'p' ./bash/"$filename".txt | grep ".*" --color
 	else
-		sed -n $i',$p' ./bash/"$filename".txt
+		sed -n $i',$p' ./bash/"$filename".txt | grep ".*" --color
 	fi
+	echo
 done
