@@ -1,7 +1,7 @@
 #  File : cmd.sh
 #  ------------------------------------
 #  Create date : 2014-01-17 17:03
-#  Modified date: 2014-01-18 00:41
+#  Modified date: 2014-01-18 15:34
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -25,59 +25,86 @@ fi
 
 param="syntax options service filenames notes security output related key examples\
 	descripton configuration files caveats values"
-declare -A data
+declare -Ai data
+declare -i min=99999
 
-min=99999
-for key in $param
-do
+echo 'These KEYWORD can see :'
+for key in $param; do
 	sum=$(cat -n ./bash/"$filename".txt | grep -i "^\s*[0-9]*\s*$key[:]*$"\
 		| xargs | awk -F " " '{print $1}')
 	if [ "$(($sum))" -gt 0 ]; then
 		data[$key]=$(($sum))
+		echo "$key "
 		if [ ${data[$key]} -lt $min ]; then
 			min=${data[$key]}
 			minkey=$key
 		fi
 	fi
 done
+min=$min-1
 
-for key in ${!data[@]}
-do
-	echo $key ${data[$key]}
+declare -Ai nextarr
+declare -i j
+declare -i i=0
+tmp=$(echo ${data[@]} | sed 's/ /\n/g' | sort -n)
+for j in $tmp; do
+	nextarr[$i]=$j
+	i=$i+1
 done
 
-until [ "$keyword" != "" ]
-do
-	read -p "Input which keyword you want to see : " keyword
-	if [ "$keyword" == "" ]; then
-		echo " wrong data ,retry !!"
-	else
-		for key in ${!data[@]}
-		do
-			if [ "$keyword" == $key ]; then 
-				flag=1
-				break;
-			fi
-		done
-		if [ "$(($flag))" -ne 1 ]; then
-			echo "not find this keyword !!"
-			exit 1
-		fi
-	fi
-done
-
-if echo $keyword | grep -i "descripton"; then
+declare -i flag
+while [ 1 ]; do
+	keyword="";
 	flag=0
-	for key in ${!data[@]}
-	do
-		if echo $key | grep -i "descripton"; then
-			flag=1
-			break;
+	until [ "$keyword" != "" ]; do
+		read -p "Input which keyword you want to see(q to exit) : " keyword
+		if echo "$keyword" | grep -i "q" ; then
+			exit 0
+		fi
+		if [ "$keyword" == "" ]; then
+			echo " wrong data ,retry !!"
+		else
+			for key in ${!data[@]}; do
+				if [ "$keyword" == $key ]; then 
+					flag=1
+					break
+				fi
+			done
+			if [ "$flag" -eq 0 ]; then
+				if echo "$keyword" | grep -i "description"; then
+					sed -n '1,'$min'p' ./bash/"$filename".txt
+					continue 2
+				fi
+			fi
+			if [ "$flag" -ne 1 ]; then
+				echo "not find this keyword !!"
+				exit 1
+			fi
 		fi
 	done
-	if [ $(($flag)) -eq 0 ]; then
-		cat ./bash/"$filename".txt | sed -n "1,"$(($min-1))"p"
-	fi
-fi
 
-exit 0
+	flag=2
+	declare -i k
+	for key in ${!data[@]};  do
+		if echo "$key" | grep -i "$keyword"; then
+			i=${data[$key]}
+			for j in ${nextarr[@]}; do
+				if [ "$flag" -eq 0 ]; then
+					flag=1
+					break
+				fi
+				if [ "$j" -eq $i ]; then
+					flag=0
+				fi
+			done
+			break
+		fi
+	done
+	i=$i+1
+	if [ "$flag" -eq 1 ]; then
+		j=$j-1
+		sed -n $i','$j'p' ./bash/"$filename".txt
+	else
+		sed -n $i',$p' ./bash/"$filename".txt
+	fi
+done
