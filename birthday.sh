@@ -1,15 +1,12 @@
-#!/bin/bash
+#  File : birthday.sh
 PATH=/bin:/sbin:/usr/bin/:/usr/local/bin/:/usr/local/sbin/:~/bin
 export PATH
-
+#  Modified date: 2014-01-19 18:27
 echo "It will calulate how many days to your next birthday !!"
-echo "Author : Sen1993 [note:it is my first shell script !!]"
 
 read -p "Input your birthday(example : 19931227) : " data1
 
-if [ "$data1" == "" ]; then
-	data1="19931227"
-fi
+[ "$data1" == "" ] && data1="19931227"
 
 data_s1=$(date --date="$data1" +%s)
 data_s2=$(date +%Y)$(echo $data1 | sed 's/^[0-9]\{4\}//g')
