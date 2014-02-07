@@ -1,7 +1,7 @@
 #  File : cmd.sh
 #  ------------------------------------
 #  Create date : 2014-01-17 17:03
-#  Modified date: 2014-02-07 16:44
+#  Modified date: 2014-02-07 16:57
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -12,13 +12,10 @@ export PATH
 clear
 
 if [ "$#" -eq 1 ]; then
-	if [ -f "./bash/$1.txt" ]; then
-		filename=$1
-	else
-		echo "Not exist this file !!" && exit 1
-	fi
+	[ -f "./bash/$1.txt" ] && filename=$1 || echo "Not exist this file !!" || exit 1
 else
-	echo "need a filename like : alias" && exit 1
+	[ "$#" -gt 1 ] && echo "just one param" || echo "need a filename like alias"
+	exit 0
 fi
 
 param=$(cat -n ./bash/"$filename".txt |\
