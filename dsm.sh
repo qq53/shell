@@ -1,7 +1,7 @@
 #  File : dsm.sh
 #  ------------------------------------
 #  Create date : 2014-02-09 18:01
-#  Modified date: 2014-02-10 01:15
+#  Modified date: 2014-02-10 01:25
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -82,7 +82,7 @@ case $next in
 esac
 
 while [ -z "$file" ]; do
-	read -p "> " file
+	read -p "File> " file
 done
 
 clear
