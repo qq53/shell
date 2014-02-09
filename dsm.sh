@@ -1,7 +1,7 @@
 #  File : dsm.sh
 #  ------------------------------------
 #  Create date : 2014-02-09 18:01
-#  Modified date: 2014-02-10 01:25
+#  Modified date: 2014-02-10 01:53
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -25,10 +25,7 @@ cmd=" -d "
 declare next=""
 declare file=""
 declare func=""
-declare start="1"
-declare end="$"
 declare -i lines=0
-
 
 for i in $@; do
 
@@ -55,7 +52,6 @@ for i in $@; do
 		next=$i
 		;;
 	esac
-
 done
 
 i=""
@@ -86,9 +82,8 @@ while [ -z "$file" ]; do
 done
 
 clear
-
 for f in $file; do
-	echo "File: $f"
+	objdump $cmd$f | sed -n '2p' | sed 's/ //g'
 	if [ -n "$func" ]; then
 		for i in $func; do
 			if objdump $cmd$f | egrep "<$i>:" > /dev/null; then
@@ -97,20 +92,19 @@ for f in $file; do
 				echo -e "no function: $i" && continue 1
 			fi
 
-			start=$[$(objdump $cmd$f | sed "/<$i>:/q" | wc -l)]
 			if [ "$lines" -ne 0 ]; then
-				end=$[$start+$lines]
-				objdump $cmd$f | sed -n "$start,${end}p" |\
-					sed 's/\t/ /g' | egrep "[,:]" --color
+				objdump $cmd$f | tac | sed "/<$i>:/q" | tac |\
+					head -n $lines | sed 's/\t/ /g' |\
+					egrep "[,:]" --color
 			else
-				objdump $cmd$f | sed -n "$start,\$p" | sed '/^$/q' |\
-					sed 's/\t/ /g' | egrep "[,:]" --color
+				objdump $cmd$f | tac | sed "/<$i>:/q" | tac |\
+					sed '/^$/q' | sed 's/\t/ /g' |\
+					egrep "[,:]" --color
 			fi
 		done
 	else
 		if [ "$lines" -ne 0 ]; then
-			end=$[1+$lines]
-			objdump $cmd$f | sed -n "1,${end}p" |\
+			objdump $cmd$f | head -n $lines |\
 				sed 's/\t/ /g' | egrep "[,:]" --color
 		else
 			objdump $cmd$f | sed 's/\t/ /g' | egrep "[,:]" --color
