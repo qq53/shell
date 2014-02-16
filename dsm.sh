@@ -1,7 +1,7 @@
 #  File : dsm.sh
 #  ------------------------------------
 #  Create date : 2014-02-09 18:01
-#  Modified date: 2014-02-10 01:53
+#  Modified date: 2014-02-16 19:51
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -80,6 +80,8 @@ esac
 while [ -z "$file" ]; do
 	read -p "File> " file
 done
+[ "$lines" -ge 3 ] && lines+=1
+[ "$lines" -ne 0 ] && lines+=3
 
 clear
 for f in $file; do
