@@ -1,7 +1,7 @@
 #  File : dsm.sh
 #  ------------------------------------
 #  Create date : 2014-02-09 18:01
-#  Modified date: 2014-02-16 19:51
+#  Modified date: 2014-02-26 18:32
 #  Author : Sen1993
 #  Email : 1730806439@qq.com
 #  ------------------------------------
@@ -18,6 +18,7 @@ function showhelp
 		"\n\t -n lines to display\n"
 }
 
+[ $# -le 0 ] && showhelp && exit 0
 echo $@ | egrep "\-h\b" > /dev/null && showhelp && exit 0 
 echo $@ | egrep "\-\-help\b" > /dev/null && showhelp && exit 0
 
