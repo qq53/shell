@@ -21,6 +21,5 @@ while true; do
 	aa=$base$aa
 	i+=1
 	[ $i -ge 998 ] && break 1
-	break 1
 	rm *.htm*
 done
